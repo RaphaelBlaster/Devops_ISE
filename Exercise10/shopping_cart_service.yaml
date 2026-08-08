@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-cart-service
+  labels:
+    app: shopping-cart
+spec:
+  type: ClusterIP
+  selector:
+    app: shopping-cart
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080

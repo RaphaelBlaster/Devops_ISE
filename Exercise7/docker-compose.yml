@@ -1,0 +1,23 @@
+name: jenkins
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk21
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+    restart: unless-stopped
+
+# The controller image ships without a container runtime. Build agents that have
+# to create images need their own Docker access: mount the daemon socket into an
+# agent container (for example -v /var/run/docker.sock:/var/run/docker.sock) or
+# run the agent on a host where Docker is installed and reachable.
+#
+# The controller itself only needs Docker when a pipeline step asks the
+# controller to build an image directly.
+
+volumes:
+  jenkins-home:

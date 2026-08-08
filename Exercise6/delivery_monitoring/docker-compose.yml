@@ -1,0 +1,47 @@
+name: delivery-monitoring
+
+services:
+  delivery-metrics:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+    depends_on:
+      delivery-metrics:
+        # Prometheus may only start once /health answers, otherwise the first
+        # scrapes fail and the target looks down in the UI.
+        condition: service_healthy
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+volumes:
+  grafana-data:
+
+networks:
+  monitoring:
+    driver: bridge

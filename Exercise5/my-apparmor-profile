@@ -1,0 +1,33 @@
+# Load this profile on a Linux host: AppArmor is a Linux kernel feature and the
+# Windows Docker Desktop engine cannot apply it. See README.md.
+#include <tunables/global>
+
+profile devops-demo flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  # The interpreter needs read and execute access to itself and its libraries.
+  /usr/local/bin/python3.11 rix,
+  /usr/local/lib/** mr,
+  /usr/lib/** mr,
+  /lib/** mr,
+  /etc/ld.so.cache r,
+  /etc/ld.so.preload r,
+  /etc/localtime r,
+  /proc/** r,
+  /sys/devices/system/cpu/** r,
+  /dev/urandom r,
+  /dev/null rw,
+
+  # The only directory this process is allowed to write to.
+  /tmp/apparmor-demo/ rw,
+  /tmp/apparmor-demo/** rw,
+
+  # Deny rules win over every allow rule, including the ones in abstractions.
+  deny /etc/shadow r,
+  deny /etc/shadow- r,
+  deny /etc/gshadow r,
+  deny network raw,
+  deny network packet,
+
+  # There is no allow-all rule, so anything not listed above stays denied.
+}

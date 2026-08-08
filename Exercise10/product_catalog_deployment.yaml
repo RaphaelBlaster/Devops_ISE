@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-catalog
+  labels:
+    app: product-catalog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: product-catalog
+  template:
+    metadata:
+      labels:
+        app: product-catalog
+    spec:
+      # Required anti-affinity: the two catalog pods may not share a hostname,
+      # so on a three-node cluster they land on two different nodes.
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: product-catalog
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: product-catalog
+          image: product-catalog:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

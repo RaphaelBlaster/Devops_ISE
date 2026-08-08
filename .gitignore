@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+kubeconfig
+*.token
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and build output
+*.log
+build/
+dist/
+*.tar
+*.tar.gz

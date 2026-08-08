@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Megh Mayur - portfolio</title>
+    <meta name="description" content="Portfolio page for Megh Mayur: about, projects and contact details.">
+    <!-- Only local assets. No CDN, no web fonts, so the page works offline. -->
+    <link rel="stylesheet" href="portfolio.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <p class="brand">Megh Mayur</p>
+      <nav class="site-nav" aria-label="Page sections">
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section id="hero" class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">DevOps and cloud engineering student</p>
+        <h1 id="hero-title">Hi, I am Megh Mayur.</h1>
+        <p class="lede">
+          I build small, reproducible systems: containers, Kubernetes manifests
+          and the pipelines that ship them. This page collects the work I can
+          show and the ways to reach me.
+        </p>
+        <p class="hero-actions">
+          <a class="button" href="#projects">See the projects</a>
+          <a class="button button-quiet" href="#contact">Get in touch</a>
+        </p>
+      </section>
+
+      <section id="about" class="panel" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p>
+          Write two or three sentences here about what you study, what you like
+          to build, and which tools you reach for first. Keep it specific: the
+          name of a course, the kind of system you enjoy, the part of the work
+          you want more of.
+        </p>
+        <p>
+          Then list the things you can honestly do today. Short lists read
+          better than long ones.
+        </p>
+        <ul class="tag-list">
+          <li>Docker and container images</li>
+          <li>Kubernetes workloads and services</li>
+          <li>CI pipelines</li>
+          <li>Linux and PowerShell scripting</li>
+        </ul>
+      </section>
+
+      <section id="projects" class="panel" aria-labelledby="projects-title">
+        <h2 id="projects-title">Projects</h2>
+        <p class="section-note">
+          Each card below is a placeholder. Replace the title, the description,
+          the technology list and the link with your own work, and delete the
+          cards you do not need.
+        </p>
+
+        <!--
+          PLACEHOLDER PROJECT CARDS - replace before publishing.
+          Copy one <li class="project-card"> block for each real project.
+          Point href at the repository or the live page, and update the
+          aria-label so it describes that link.
+        -->
+        <ul class="project-grid">
+          <li class="project-card">
+            <h3>Project one</h3>
+            <p>
+              One sentence on the problem and one on what you built. Mention the
+              result, for example the number of containers or the time the
+              pipeline saves.
+            </p>
+            <ul class="tag-list">
+              <li>Docker</li>
+              <li>Kubernetes</li>
+            </ul>
+            <a href="https://example.com/project-one" aria-label="Project one: repository">View project</a>
+          </li>
+          <li class="project-card">
+            <h3>Project two</h3>
+            <p>
+              What it does, what it replaced, and anything you would do
+              differently next time.
+            </p>
+            <ul class="tag-list">
+              <li>Python</li>
+              <li>Flask</li>
+            </ul>
+            <a href="https://example.com/project-two" aria-label="Project two: repository">View project</a>
+          </li>
+          <li class="project-card">
+            <h3>Project three</h3>
+            <p>
+              A monitoring or automation project works well here. Name the tool
+              and the signal it watches.
+            </p>
+            <ul class="tag-list">
+              <li>Prometheus</li>
+              <li>Grafana</li>
+            </ul>
+            <a href="https://example.com/project-three" aria-label="Project three: repository">View project</a>
+          </li>
+          <li class="project-card">
+            <h3>Project four</h3>
+            <p>
+              A course project is fine. Say what you owned and what the rest of
+              the team owned.
+            </p>
+            <ul class="tag-list">
+              <li>Jenkins</li>
+              <li>Git</li>
+            </ul>
+            <a href="https://example.com/project-four" aria-label="Project four: repository">View project</a>
+          </li>
+        </ul>
+      </section>
+
+      <section id="contact" class="panel" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <ul class="contact-list">
+          <li>Email: <a href="mailto:meghmayur.is23@bmsce.ac.in">meghmayur.is23@bmsce.ac.in</a></li>
+          <li>GitHub: <a href="https://github.com/RaphaelBlaster">github.com/RaphaelBlaster</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Built by hand with plain HTML and CSS. No frameworks, no trackers.</p>
+    </footer>
+  </body>
+</html>

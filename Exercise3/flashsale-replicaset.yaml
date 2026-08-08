@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: flashsale
+  labels:
+    app: flashsale
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flashsale
+  template:
+    metadata:
+      labels:
+        app: flashsale
+    spec:
+      containers:
+        - name: flashsale
+          image: flashsale:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 5000
+          env:
+            - name: STOCK
+              value: "100"

@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: .
+    image: ex4-two-containers:latest
+    # Overrides the image command: this container runs the rate backend only.
+    command: ["python", "backend.py"]
+    networks:
+      - ex4-net
+    expose:
+      - "8000"
+
+  web:
+    build: .
+    image: ex4-two-containers:latest
+    environment:
+      BACKEND_URL: http://backend:8000
+    networks:
+      - ex4-net
+    ports:
+      - "8080:5000"
+    depends_on:
+      - backend
+
+networks:
+  ex4-net:
+    name: ex4-net
+    driver: bridge

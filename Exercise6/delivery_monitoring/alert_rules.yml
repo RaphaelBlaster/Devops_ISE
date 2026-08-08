@@ -1,0 +1,25 @@
+groups:
+  - name: delivery-monitoring
+    rules:
+      - alert: HighPendingDeliveries
+        expr: pending_deliveries > 10
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 10 deliveries are waiting to be picked up"
+          description: >-
+            Job {{ $labels.job }} reports pending_deliveries = {{ $value }}.
+            Courier capacity is behind the incoming order rate.
+
+      - alert: HighAverageDeliveryTime
+        expr: average_delivery_time_sum / average_delivery_time_count > 30
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Average delivery time is above 30 seconds"
+          description: >-
+            Job {{ $labels.job }} reports an average delivery time of
+            {{ $value | printf "%.2f" }} seconds, which is above the 30 second
+            service target.

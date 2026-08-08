@@ -1,0 +1,128 @@
+// Declarative pipeline for Exercise 9.
+//
+// Agent requirements: git, python3 with the venv module, curl, and a POSIX
+// shell. On a Windows agent the `sh` steps would become `bat` steps and python3
+// would become python.
+//
+// The directory names are relative to the workspace root, which is the root of
+// this repository. The job therefore uses the script path
+// Exercise9/Jenkinsfile with the branch specifier */main.
+
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        // The Checkout stage below performs the clone, so the implicit checkout
+        // that declarative pipelines run before the first stage is not wanted.
+        skipDefaultCheckout()
+    }
+
+    environment {
+        APP_DIR = 'Exercise9/python-flask-app'
+        DEPLOY_DIR = 'Exercise9/python-app-deploy'
+        PORT = '5000'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'python3 -m venv .venv'
+                    sh '. .venv/bin/activate && python -m pip install --disable-pip-version-check -r requirements.txt'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '. .venv/bin/activate && python -m unittest discover -s . -p "test_*.py" -v'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh "mkdir -p ${DEPLOY_DIR}"
+                sh "cp ${APP_DIR}/app.py ${APP_DIR}/requirements.txt ${DEPLOY_DIR}/"
+                sh "ls -l ${DEPLOY_DIR}"
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    // The deployed directory holds the artefacts; the runtime is
+                    // the virtual environment that the Build stage created.
+                    // JENKINS_NODE_COOKIE=dontKillMe stops the process tree
+                    // killer from taking the background process down when the
+                    // step ends.
+                    sh '''
+                        set -eu
+                        rm -f app.pid app.log
+                        JENKINS_NODE_COOKIE=dontKillMe nohup ../python-flask-app/.venv/bin/python app.py > app.log 2>&1 &
+                        echo $! > app.pid
+                        echo "started application with pid $(cat app.pid)"
+                    '''
+                    sh '''
+                        set -eu
+                        for attempt in $(seq 1 30); do
+                            if curl -fsS "http://127.0.0.1:${PORT}/health" > /dev/null; then
+                                echo "application answered on attempt ${attempt}"
+                                exit 0
+                            fi
+                            sleep 2
+                        done
+                        echo "application did not answer on /health within 60 seconds" >&2
+                        tail -n 50 app.log >&2 || true
+                        exit 1
+                    '''
+                }
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    sh '''
+                        set -eu
+                        response=$(curl -fsS "http://127.0.0.1:${PORT}/health")
+                        echo "health response: ${response}"
+                        echo "${response}" | grep -q '"status":"ok"' || {
+                            echo "health check failed" >&2
+                            exit 1
+                        }
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                def pidFile = "${DEPLOY_DIR}/app.pid"
+                if (fileExists(pidFile)) {
+                    sh "kill \$(cat ${pidFile}) 2>/dev/null || true"
+                    sh "rm -f ${pidFile}"
+                } else {
+                    echo 'no app.pid in the deploy directory, nothing to stop'
+                }
+                echo "Build result: ${currentBuild.currentResult}"
+            }
+        }
+        failure {
+            dir(DEPLOY_DIR) {
+                sh 'tail -n 50 app.log || true'
+            }
+        }
+    }
+}

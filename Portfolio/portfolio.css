@@ -1,0 +1,305 @@
+/* Portfolio stylesheet.
+   Dark theme, one column on small screens, two columns of cards from 40rem up.
+   Colours live in custom properties on :root so the whole page can be retinted
+   by editing one block. */
+
+:root {
+  --bg: #0f1116;
+  --bg-raised: #171a22;
+  --bg-raised-hover: #1d212b;
+  --border: #2a2f3a;
+  --text: #e7e9ee;
+  --text-muted: #a2a9b8;
+  --accent: #6ea8fe;
+  --accent-strong: #9cc4ff;
+  --focus: #ffd166;
+
+  --radius: 10px;
+  --gap: 1.25rem;
+  --measure: 68ch;
+  --space-section: clamp(2.5rem, 6vw, 4.5rem);
+
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus ring for keyboard users. Never removed, only styled. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: #0b0d12;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--radius) 0;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent-strong);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  background: rgba(15, 17, 22, 0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+
+.brand {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+}
+
+.site-nav a:hover {
+  color: var(--text);
+  background: var(--bg-raised);
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+
+section {
+  padding: var(--space-section) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+section:last-of-type {
+  border-bottom: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0 0 0.6rem;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 5vw, 2.9rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+p {
+  max-width: var(--measure);
+  margin: 0 0 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.4rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lede {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #0b0d12;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #0b0d12;
+}
+
+.button-quiet {
+  background: transparent;
+  color: var(--accent);
+}
+
+.button-quiet:hover {
+  background: var(--bg-raised);
+  color: var(--accent-strong);
+}
+
+.section-note {
+  color: var(--text-muted);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-list li {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+/* Card grid: one column on phones, auto-fit columns from 40rem up. */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40rem) {
+  .project-grid {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.project-card:hover {
+  background: var(--bg-raised-hover);
+  border-color: var(--accent);
+}
+
+.project-card p {
+  flex: 1;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.project-card > a {
+  align-self: flex-start;
+  font-weight: 600;
+}
+
+.contact-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.contact-list li {
+  margin-bottom: 0.4rem;
+}
+
+.site-footer {
+  padding: 2rem clamp(1rem, 4vw, 2.5rem);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .hero-actions {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
